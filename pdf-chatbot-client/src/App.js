@@ -105,7 +105,7 @@ const App = () => {
   return (
     <div className="flex flex-col justify-center align-center h-full mx-auto rounded-lg text-center">
       <ToastContainer />
-      <div className="flex flex-col bg-gray-100 h-screen rounded-lg w-full sm:border-2 sm:border-black sm:w-3/4  sm:mx-auto  md:w-1/2 md:h-[90vh]  lg:w-1/3 lg:h-[80vh]">
+      <div className="container">
         <div className="bg-green-500 text-white py-4 px-6 text-lg font-bold flex justify-between rounded-t-lg">
           PDF Chatbot
         </div>

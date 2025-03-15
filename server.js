@@ -20,13 +20,13 @@ app.use(express.json());
 
 const upload = multer({ dest: "uploads/" });
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-// const buildPath = path.join(__dirname, "./pdf-chatbot-client/build");
-// app.use(express.static(buildPath));
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(buildPath, 'index.html'));
-//   });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const buildPath = path.join(__dirname, "./pdf-chatbot-client/build");
+app.use(express.static(buildPath));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
 
 const mqttClient = mqtt.connect("ws://65.2.179.139:9001/mqtt", {
   username: process.env.MQTT_USER_ID,

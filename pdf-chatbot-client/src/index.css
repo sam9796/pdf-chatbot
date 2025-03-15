@@ -2,3 +2,38 @@
 body,#root{
   height:100vh;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f3f4f6; /* bg-gray-100 */
+  height: 100vh;
+  border-radius: 0.5rem; /* rounded-lg */
+  width: 100%; /* w-full */
+}
+
+/* ✅ Apply styles for small screens (sm) */
+@media (min-width: 640px) { /* sm: */
+  .container {
+    border: 2px solid black; /* sm:border-2 sm:border-black */
+    width: 75%; /* sm:w-3/4 */
+    margin-left: auto; /* sm:mx-auto */
+    margin-right: auto; /* sm:mx-auto */
+  }
+}
+
+/* ✅ Apply styles for medium screens (md) */
+@media (min-width: 768px) { /* md: */
+  .container {
+    width: 50%; /* md:w-1/2 */
+    height: 90vh; /* md:h-[90vh] */
+  }
+}
+
+/* ✅ Apply styles for large screens (lg) */
+@media (min-width: 1024px) { /* lg: */
+  .container {
+    width: 33.33%; /* lg:w-1/3 */
+    height: 80vh; /* lg:h-[80vh] */
+  }
+}
