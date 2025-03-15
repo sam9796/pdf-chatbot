@@ -116,8 +116,7 @@ app.post("/ask", async (req, res) => {
   const { question, context } = req.body;
   try {
     const extractedText = fs.readFileSync(context, "utf8");
-    // const response = await getResponse(question, extractedText);
-    const response="Shubham";
+    const response = await getResponse(question, extractedText);
     const payload = JSON.stringify({ question, response });
     mqttClient.publish("pdf-chat/response", payload, { qos: 1 }, (err) => {
       if (err) {
