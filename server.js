@@ -36,17 +36,13 @@ mqttClient.on("connect", () => {
 
 const extractTextFromPDFStream = async (pdfPath) => {
   return new Promise((resolve, reject) => {
-    const readStream = fs.createReadStream(pdfPath);
-    const chunks = [];
+    fs.readFile(pdfPath, (err, pdfBuffer) => {
+        if (err) {
+            reject(err);
+            return;
+        }
 
-    readStream.on("data", (chunk) => {
-        chunks.push(chunk); // Collecting chunks of data
-    });
-
-    readStream.on("end", () => {
-        const pdfBuffer = Buffer.concat(chunks); // Convert collected chunks into a buffer
-
-        pdfExtract.extractBuffer(pdfBuffer, {}, (err, data) => {
+        pdfParser.extractBuffer(pdfBuffer, {}, (err, data) => {
             if (err) {
                 reject(err);
                 return;
@@ -60,10 +56,6 @@ const extractTextFromPDFStream = async (pdfPath) => {
 
             resolve(extractedText);
         });
-    });
-
-    readStream.on("error", (error) => {
-        reject(error);
     });
 });
 };
