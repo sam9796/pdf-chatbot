@@ -4,14 +4,14 @@ import multer from "multer";
 import mqtt from "mqtt";
 import dotenv from "dotenv";
 import fs from "fs";
-import { PDFExtract } from "pdf.js-extract";
 import crypto from "crypto";
-const pdfExtract = new PDFExtract();
 import path from "path";
 import axios from "axios";
 import { fileURLToPath } from "url";
+import { PDFExtract } from "pdf.js-extract";
 
 dotenv.config();
+const pdfExtract = new PDFExtract();
 
 const app = express();
 app.use(cors());
@@ -36,13 +36,17 @@ mqttClient.on("connect", () => {
 
 const extractTextFromPDFStream = async (pdfPath) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(pdfPath, (err, pdfBuffer) => {
-        if (err) {
-            reject(err);
-            return;
-        }
+    const readStream = fs.createReadStream(pdfPath);
+    const chunks = [];
 
-        pdfParser.extractBuffer(pdfBuffer, {}, (err, data) => {
+    readStream.on("data", (chunk) => {
+        chunks.push(chunk); // Collecting chunks of data
+    });
+
+    readStream.on("end", () => {
+        const pdfBuffer = Buffer.concat(chunks); // Convert collected chunks into a buffer
+
+        pdfExtract.extractBuffer(pdfBuffer, {}, (err, data) => {
             if (err) {
                 reject(err);
                 return;
@@ -56,6 +60,10 @@ const extractTextFromPDFStream = async (pdfPath) => {
 
             resolve(extractedText);
         });
+    });
+
+    readStream.on("error", (error) => {
+        reject(error);
     });
 });
 };
