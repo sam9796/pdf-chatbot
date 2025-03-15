@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
-const mqttClient = mqtt.connect("ws://65.2.179.139:9001/mqtt", {
+const mqttClient = mqtt.connect("wss://65.2.179.139:9001/mqtt", {
   username: process.env.MQTT_USER_ID,
   password: process.env.MQTT_PASSWORD,
 });
@@ -37,12 +37,6 @@ const mqttClient = mqtt.connect("ws://65.2.179.139:9001/mqtt", {
 mqttClient.on("connect", () => {
   console.log("MQTT Connected!");
 });
-
-
-app.get("/home",async (req,res)=>{
-  res.json({success:true});
-})
-
 
 const extractTextFromPDFStream = async (pdfPath) => {
     return new Promise((resolve, reject) => {
