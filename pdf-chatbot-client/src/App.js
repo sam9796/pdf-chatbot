@@ -18,7 +18,10 @@ const App = () => {
     else toast.error(msg, { position: "top-right", autoClose: 3000 });
   };
   useEffect(() => {
-    const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
+    const client=mqtt.connect('ws://65.2.179.139:9001/mqtt', {
+      username: 'gwortssh',
+      password: 'F3Ce-SNdObpe',
+    });
     client.on("connect", () => {});
     client.subscribe("pdf-chat/response");
 
@@ -56,7 +59,6 @@ const App = () => {
     formData.append("pdf", selectedFile);
     try{const response = await axios.post("http://localhost:8080/upload", formData);
     setTextFilePath(response.data.textFilePath);
-    event.target.value=null;
     notify("success", "📄 PDF Uploaded Successfully!");
     setChat((prev) => [
       ...prev,
@@ -72,6 +74,7 @@ const App = () => {
         notify("error",error.response.data.error);
       }
     }
+    event.target.value=null;
   };
 
   const askQuestion = async () => {
@@ -90,11 +93,11 @@ const App = () => {
     try{await axios.post("http://localhost:8080/ask", {
       question,
       context: textFilePath,
-    });
-    setQuestion("");}
+    });}
     catch(error){
       notify("error",error.response.data.error);
     }
+     setQuestion("");
   };
 
   return (

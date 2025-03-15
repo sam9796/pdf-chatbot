@@ -29,32 +29,47 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
-const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
-
+const mqttClient=mqtt.connect('ws://65.2.179.139:9001/mqtt', {
+  username: process.env.MQTT_USER_ID,
+  password: process.env.MQTT_PASSWORD,
+})
 
 mqttClient.on("connect", () => {
   console.log("MQTT Connected!");
 });
 
 const extractTextFromPDFStream = async (pdfPath) => {
-    return new Promise((resolve, reject) => {
-        const readStream = fs.createReadStream(pdfPath); 
-        let extractedText = "";
-        pdfExtract.extract(pdfPath, {}, (err, data) => {
+  return new Promise((resolve, reject) => {
+    const readStream = fs.createReadStream(pdfPath);
+    const chunks = [];
+
+    readStream.on("data", (chunk) => {
+        chunks.push(chunk); // Collecting chunks of data
+    });
+
+    readStream.on("end", () => {
+        const pdfBuffer = Buffer.concat(chunks); // Convert collected chunks into a buffer
+
+        pdfExtract.extractBuffer(pdfBuffer, {}, (err, data) => {
             if (err) {
                 reject(err);
                 return;
             }
+
+            let extractedText = "";
             data.pages.forEach((page) => {
                 const pageText = page.content.map((textObj) => textObj.str).join(" ");
                 extractedText += pageText + "\n";
             });
+
             resolve(extractedText);
         });
-        readStream.on("error", (error) => {
-            reject(error);
-        });
     });
+
+    readStream.on("error", (error) => {
+        reject(error);
+    });
+});
 };
 
 const generateUniqueFilename = (originalName) => {
@@ -105,7 +120,8 @@ app.post("/ask", async (req, res) => {
   const { question, context } = req.body;
   try {
     const extractedText = fs.readFileSync(context, "utf8");
-    const response = await getResponse(question, extractedText);
+    // const response = await getResponse(question, extractedText);
+    const response="Shubham";
     const payload = JSON.stringify({ question, response });
     mqttClient.publish("pdf-chat/response", payload, { qos: 1 }, (err) => {
       if (err) {
