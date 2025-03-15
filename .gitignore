@@ -1,2 +1,4 @@
 node_modules
-./pdf-chatbot-client/node_modules
+pdf-chatbot-client/*
+!pdf-chatbot-client/build/
+!pdf-chatbot-client/build/**
