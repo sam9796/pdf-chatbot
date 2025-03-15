@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.join(__dirname, "./pdf-chatbot-client/build");
 app.use(express.static(buildPath));
 
-app.get("/home", (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
@@ -37,6 +37,11 @@ const mqttClient = mqtt.connect("ws://65.2.179.139:9001/mqtt", {
 mqttClient.on("connect", () => {
   console.log("MQTT Connected!");
 });
+
+
+app.get("/home",async (req,res)=>{
+  res.json({success:true});
+})
 
 
 const extractTextFromPDFStream = async (pdfPath) => {
