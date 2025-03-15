@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.join(__dirname, "./pdf-chatbot-client/build");
 app.use(express.static(buildPath));
 
-app.get("*", (req, res) => {
+app.get("/home", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
