@@ -18,10 +18,7 @@ const App = () => {
     else toast.error(msg, { position: "top-right", autoClose: 3000 });
   };
   useEffect(() => {
-    const client=mqtt.connect('ws://65.2.179.139:9001/mqtt', {
-      username: 'gwortssh',
-      password: 'F3Ce-SNdObpe',
-    });
+    const client=mqtt.connect('wss://broker.emqx.io:8084/mqtt');
     client.on("connect", () => {});
     client.subscribe("pdf-chat/response");
 
@@ -57,14 +54,14 @@ const App = () => {
     setFile(selectedFile);
     const formData = new FormData();
     formData.append("pdf", selectedFile);
-    try{const response = await axios.post("http://localhost:8080/upload", formData);
+    try{const response = await axios.post("https://pdf-chatbot-app-70a963b1b814.herokuapp.com/upload", formData);
     setTextFilePath(response.data.textFilePath);
     notify("success", "📄 PDF Uploaded Successfully!");
     setChat((prev) => [
       ...prev,
       { question:"Generate summary of context provided", answer: "Waiting for AI response..." },
     ]);
-    await axios.post("http://localhost:8080/ask", {
+    await axios.post("https://pdf-chatbot-app-70a963b1b814.herokuapp.com/ask", {
       question:"Generate summary of context provided",
       context: response.data.textFilePath,
     });
@@ -90,7 +87,7 @@ const App = () => {
       ...prev,
       { question, answer: "Waiting for AI response..." },
     ]);
-    try{await axios.post("http://localhost:8080/ask", {
+    try{await axios.post("https://pdf-chatbot-app-70a963b1b814.herokuapp.com/ask", {
       question,
       context: textFilePath,
     });}

@@ -29,11 +29,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
-const mqttClient=mqtt.connect('ws://65.2.179.139:9001/mqtt', {
-  username: process.env.MQTT_USER_ID,
-  password: process.env.MQTT_PASSWORD,
-})
-
+const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
 mqttClient.on("connect", () => {
   console.log("MQTT Connected!");
 });
