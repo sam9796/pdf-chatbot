@@ -23,8 +23,6 @@ cd pdf-chatbot
 
 ### **2️⃣ Backend Setup**
 
-```Add .env file in the current directory```
-
 npm install
 
 nodemon server.js
