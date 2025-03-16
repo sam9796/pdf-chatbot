@@ -21,7 +21,7 @@ git clone https://github.com/sam9796/pdf-chatbot.git
 
 cd pdf-chatbot
 
-*Backend Setup*
+### **2️⃣ Backend Setup**
 
 ```Add .env file in the current directory```
 
