@@ -28,4 +28,5 @@ npm install
 nodemon server.js
 
 ```Open localhost:8080 to see the UI```
+
 ```Attach one pdf file first to start asking questions```
