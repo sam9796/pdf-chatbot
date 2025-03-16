@@ -1,6 +1,6 @@
 # 📄 PDF Chatbot
 
-An AI-powered chatbot that allows users to **upload PDFs and ask questions** about their content in real time using **TOGETHER API and MQTT**.
+An AI-powered chatbot that allows users to **upload PDFs and ask questions** about their content in real-time using **TOGETHER API and MQTT**.
 
 ---
 
@@ -28,3 +28,4 @@ npm install
 nodemon server.js
 
 ```Open localhost:8080 to see the UI```
+```Attach one pdf file first to start asking questions```
