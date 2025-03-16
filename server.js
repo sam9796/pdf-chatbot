@@ -8,10 +8,9 @@ import crypto from "crypto";
 import path from "path";
 import axios from "axios";
 import { fileURLToPath } from "url";
-import { PDFExtract } from "pdf.js-extract";
+import { spawn } from "child_process";
 
 dotenv.config();
-const pdfExtract = new PDFExtract();
 
 const app = express();
 app.use(cors());
@@ -36,34 +35,24 @@ mqttClient.on("connect", () => {
 
 const extractTextFromPDFStream = async (pdfPath) => {
   return new Promise((resolve, reject) => {
-    const readStream = fs.createReadStream(pdfPath);
-    const chunks = [];
+    let extractedText = "";
 
-    readStream.on("data", (chunk) => {
-        chunks.push(chunk); // Collecting chunks of data
+    const process = spawn("pdftotext", ["-layout", pdfPath, "-"]); 
+
+    process.stdout.on("data", (data) => {
+        extractedText += data.toString();
     });
 
-    readStream.on("end", () => {
-        const pdfBuffer = Buffer.concat(chunks); // Convert collected chunks into a buffer
+    process.stderr.on("data", (data) => {
+        console.error(`Error extracting text: ${data}`);
+    });
 
-        pdfExtract.extractBuffer(pdfBuffer, {}, (err, data) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            let extractedText = "";
-            data.pages.forEach((page) => {
-                const pageText = page.content.map((textObj) => textObj.str).join(" ");
-                extractedText += pageText + "\n";
-            });
-
+    process.on("close", (code) => {
+        if (code === 0) {
             resolve(extractedText);
-        });
-    });
-
-    readStream.on("error", (error) => {
-        reject(error);
+        } else {
+            reject(new Error(`pdftotext process exited with code ${code}`));
+        }
     });
 });
 };
